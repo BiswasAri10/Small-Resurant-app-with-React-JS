@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, Fragment } from "react";
+import AddOrderItem from "./Components/Orders/AddOrderItem";
+import OrdersList from "./Components/Orders/Orderslist";
 
 function App() {
+  const [orders, setOrders] = useState([]);
+
+  const addOrderHandler = (dishName, dishPrice, tableNumber) => {
+    const newOrder = {
+      id: Math.random().toString(),
+      dishName: dishName,
+      dishPrice: dishPrice,
+      tableNumber: tableNumber,
+    };
+
+    setOrders((prevOrders) => [...prevOrders, newOrder]);
+  };
+
+  const deleteOrderHandler = (orderId) => {
+    setOrders((prevOrders) =>
+      prevOrders.filter((order) => order.id !== orderId)
+    );
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <div className="container">
+        <h1>Restaurant App</h1>
+
+        <AddOrderItem onAddOrderItem={addOrderHandler} />
+
+        <h2>Orders:</h2>
+        {orders.length > 0 ? (
+          <OrdersList orders={orders} onDelete={deleteOrderHandler} />
+        ) : (
+          <p>No orders yet.</p>
+        )}
+      </div>
+    </Fragment>
   );
 }
 
